@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Attribution</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+
+  <!-- ── Header ── -->
+  <header class="app-header">
+    <div class="brand">
+      <span>📅</span>
+      <strong>Event Attribution</strong>
+    </div>
+    <div class="header-right">
+      <span class="badge" id="google-badge"><span class="dot"></span>Google</span>
+      <span class="badge" id="sf-badge"><span class="dot"></span>Salesforce</span>
+      <button class="hdr-btn" id="settings-btn">⚙ Settings</button>
+    </div>
+  </header>
+
+  <!-- ── Settings panel (collapsible) ── -->
+  <section class="settings-panel" id="settings-panel">
+    <div class="settings-body">
+      <div class="settings-grid">
+
+        <div class="settings-col">
+          <h3>Google Calendar</h3>
+          <p class="hint">
+            In <a href="https://console.cloud.google.com/apis/credentials" target="_blank">
+              Google Cloud Console</a>, create a <em>Web Application</em> OAuth 2.0 Client ID.
+            Add <strong id="app-uri">…</strong> as an Authorized Redirect URI.
+            Enable the <strong>Google Calendar API</strong> in the project.
+          </p>
+          <label for="f-google-id">OAuth Client ID</label>
+          <input id="f-google-id" type="text" placeholder="123456789-abc.apps.googleusercontent.com">
+        </div>
+
+        <div class="settings-col">
+          <h3>Salesforce</h3>
+          <p class="hint">
+            Create a Connected App in Salesforce Setup with OAuth enabled.
+            Add <strong id="sf-uri">…</strong> as a Callback URL.
+          </p>
+          <label for="f-sf-url">Instance URL</label>
+          <input id="f-sf-url" type="text" placeholder="https://org62.my.salesforce.com">
+          <label for="f-sf-id">Consumer Key</label>
+          <input id="f-sf-id" type="text" placeholder="3MVG9…">
+        </div>
+
+      </div>
+      <div class="settings-footer">
+        <button class="btn btn-primary" id="save-btn">Save Settings</button>
+        <button class="btn btn-ghost"   id="disconnect-btn">Disconnect All</button>
+        <span id="settings-msg"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Main content ── -->
+  <main class="main">
+
+    <!-- Auth panel -->
+    <div id="auth-panel" class="auth-panel hidden">
+      <div class="auth-card">
+        <h2>Connect your accounts</h2>
+        <p>Both connections are required to suggest and apply event attributions.</p>
+        <div class="auth-btns">
+          <button class="btn btn-google" id="connect-google-btn">Connect Google Calendar</button>
+          <button class="btn btn-sf"     id="connect-sf-btn">Connect Salesforce</button>
+        </div>
+        <div id="auth-error" class="err-msg hidden"></div>
+      </div>
+    </div>
+
+    <!-- Events panel -->
+    <div id="main-panel" class="hidden">
+      <div class="panel-toolbar">
+        <h2>Upcoming Events <span class="muted">(7 days)</span></h2>
+        <button class="btn btn-ghost" id="refresh-btn">↻ Refresh</button>
+      </div>
+      <div id="events-list" class="events-list">
+        <p class="loading">Loading…</p>
+      </div>
+    </div>
+
+  </main>
+</div>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
