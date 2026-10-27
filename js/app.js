@@ -23,8 +23,13 @@ const state = {
 
 // ── Boot ──────────────────────────────────────────────────────────────────
 async function init() {
-  // Must run first — parses and wipes any OAuth token from the URL
-  const cb = handleOAuthCallback();
+  // Must run first — parses and wipes the OAuth code from the URL, exchanges for token
+  let cb = null;
+  try { cb = await handleOAuthCallback(); }
+  catch (err) {
+    console.error('OAuth callback error:', err);
+    // Surface the error after state is loaded
+  }
 
   state.settings     = getSettings();
   state.googleTokens = getTokens('google');
@@ -349,22 +354,22 @@ document.getElementById('disconnect-btn').addEventListener('click', () => {
   setSettingsMsg('Disconnected.', 'ok');
 });
 
-document.getElementById('connect-google-btn').addEventListener('click', () => {
+document.getElementById('connect-google-btn').addEventListener('click', async () => {
   const s = getSettings();
   if (!s.googleClientId) {
     showAuthError('Save your Google Client ID in Settings first.');
     openSettings(); return;
   }
-  redirectToGoogle(s.googleClientId);
+  await redirectToGoogle(s.googleClientId);
 });
 
-document.getElementById('connect-sf-btn').addEventListener('click', () => {
+document.getElementById('connect-sf-btn').addEventListener('click', async () => {
   const s = getSettings();
   if (!s.sfClientId || !s.sfInstanceUrl) {
     showAuthError('Save Salesforce settings first.');
     openSettings(); return;
   }
-  redirectToSalesforce(s.sfInstanceUrl, s.sfClientId);
+  await redirectToSalesforce(s.sfInstanceUrl, s.sfClientId);
 });
 
 document.getElementById('refresh-btn').addEventListener('click', loadData);
